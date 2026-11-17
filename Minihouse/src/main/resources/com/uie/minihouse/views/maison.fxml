@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.uie.minihouse.controllers.MaisonController"
+            style="-fx-background-color: #f0f4f8;">
+
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <top>
+        <VBox style="-fx-background-color: #1a237e; -fx-padding: 15 20 15 20;">
+            <Label text="🏠 MiniHouse – Gestion Immobilière"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Label text="Application de gestion de biens immobiliers"
+                   style="-fx-font-size: 12px; -fx-text-fill: #90caf9;"/>
+        </VBox>
+    </top>
+
+    <!-- ═══════════════ CENTER ═══════════════ -->
+    <center>
+        <VBox spacing="12" style="-fx-padding: 15;">
+
+            <!-- ── FORMULAIRE ── -->
+            <TitledPane text="📋 Formulaire de bien immobilier" expanded="true"
+                        style="-fx-font-weight: bold;">
+                <GridPane hgap="10" vgap="8" style="-fx-padding: 10;">
+                    <!-- Row 0 : Nom / Adresse -->
+                    <Label text="Nom / Référence :" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                           style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="tfNom" promptText="Ex: Villa Soleil" prefWidth="200"
+                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                    <Label text="Adresse :" GridPane.columnIndex="2" GridPane.rowIndex="0"
+                           style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="tfAdresse" promptText="Ex: 12 rue des Fleurs" prefWidth="220"
+                               GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                    <!-- Row 1 : Type / Statut -->
+                    <Label text="Type :" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                           style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="cbType" prefWidth="200"
+                              GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                    <Label text="Statut :" GridPane.columnIndex="2" GridPane.rowIndex="1"
+                           style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="cbStatut" prefWidth="220"
+                              GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                    <!-- Row 2 : Prix / Surface / Pièces -->
+                    <Label text="Prix (FCFA) :" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                           style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="tfPrix" promptText="Ex: 75000000"
+                               prefWidth="200"
+                               GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                    <Label text="Surface (m²) :" GridPane.columnIndex="2" GridPane.rowIndex="2"
+                           style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="tfSurface" promptText="Ex: 120"
+                               prefWidth="220"
+                               GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+                    <Label text="Nb de pièces :" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                           style="-fx-font-weight: bold;"/>
+                    <Spinner fx:id="spNbPieces" min="1" max="20" initialValue="3" prefWidth="200"
+                             GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                    <!-- Champ ID caché pour modification -->
+                    <TextField fx:id="tfId" visible="false"
+                               GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                </GridPane>
+            </TitledPane>
+
+            <!-- ── BOUTONS ACTIONS ── -->
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="btnAjouter" text="➕ Ajouter"
+                        onAction="#handleAjouter"
+                        style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 18; -fx-background-radius: 6;"/>
+                <Button fx:id="btnModifier" text="✏️ Modifier"
+                        onAction="#handleModifier"
+                        style="-fx-background-color: #1565c0; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 18; -fx-background-radius: 6;"/>
+                <Button fx:id="btnSupprimer" text="🗑️ Supprimer"
+                        onAction="#handleSupprimer"
+                        style="-fx-background-color: #b71c1c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 18; -fx-background-radius: 6;"/>
+                <Button fx:id="btnReinitialiser" text="🔄 Réinitialiser"
+                        onAction="#handleReinitialiser"
+                        style="-fx-background-color: #6d4c41; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 18; -fx-background-radius: 6;"/>
+            </HBox>
+
+            <!-- ── RECHERCHE ── -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="🔍 Recherche :" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="tfRecherche" promptText="Nom, type, adresse..." prefWidth="300"/>
+                <Button text="Rechercher" onAction="#handleRechercher"
+                        style="-fx-background-color: #f57c00; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 18; -fx-background-radius: 6;"/>
+                <Button text="Tout afficher" onAction="#handleToutAfficher"
+                        style="-fx-background-color: #546e7a; -fx-text-fill: white; -fx-padding: 8 18; -fx-background-radius: 6;"/>
+            </HBox>
+
+            <!-- ── TABLEAU ── -->
+            <TableView fx:id="tableView" prefHeight="280"
+                       style="-fx-border-color: #bbdefb; -fx-border-radius: 4;">
+                <columns>
+                    <TableColumn fx:id="colId"       text="ID"       prefWidth="45"/>
+                    <TableColumn fx:id="colNom"      text="Nom"      prefWidth="140"/>
+                    <TableColumn fx:id="colAdresse"  text="Adresse"  prefWidth="180"/>
+                    <TableColumn fx:id="colType"     text="Type"     prefWidth="100"/>
+                    <TableColumn fx:id="colPrix"     text="Prix (FCFA)" prefWidth="110"/>
+                    <TableColumn fx:id="colSurface"  text="Surface m²" prefWidth="90"/>
+                    <TableColumn fx:id="colPieces"   text="Pièces"   prefWidth="60"/>
+                    <TableColumn fx:id="colStatut"   text="Statut"   prefWidth="90"/>
+                </columns>
+            </TableView>
+
+        </VBox>
+    </center>
+
+    <!-- ═══════════════ BOTTOM – STATISTIQUES ═══════════════ -->
+    <bottom>
+        <HBox spacing="30" alignment="CENTER"
+              style="-fx-background-color: #1a237e; -fx-padding: 10 20;">
+            <Label fx:id="lblTotal"  text="Total : 0"
+                   style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+            <Label fx:id="lblVendus" text="Vendus : 0"
+                   style="-fx-text-fill: #ffcc80; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+            <Label fx:id="lblMoyen"  text="Prix moyen : 0 FCFA"
+                   style="-fx-text-fill: #a5d6a7; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
